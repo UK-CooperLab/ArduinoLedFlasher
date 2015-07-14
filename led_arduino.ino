@@ -9,6 +9,7 @@ int on_time = 5;  //minutes
 int off_time = 10; //minutes
 
 void delayMinutes(int num_minutes);
+void delaySeconds(int num_seconds);
 void allLed(bool state);
 
 void setup()
@@ -26,16 +27,32 @@ void setup()
 }
 
 
+//*********************CHANGE THE CODE BELOW THIS LINE
 void loop()
 {
 
+//Examples
+// allLed(1) turns all leds ON
+// allLed(0) turns all leds off
+// delaySeconds(x) waits x seconds before doing the next thing
+// delayMinutes(y) waits y minutes before doing the next thing
+
+
+//TOP OF LOOP
+  
   allLed(1);
-  delayMinutes(on_time);
+  delaySeconds(20);
   
   allLed(0);
-  delayMinutes(off_time);
+  delayMinutes(5);
   
+  
+  
+  //WHEN THE CODE GETS HERE IT WILL GO BACK TO "TOP OF LOOP" AND REPEAT FOREVER
 }
+
+//****************CHANGE THE CODE ABOVE THIS LINE
+
 
 
 void allLed(bool state)
@@ -65,14 +82,18 @@ void delayMinutes(int num_minutes)
 {
   for(int i = 0; i < num_minutes; i++)
   {
-    for(int j = 0; j < 60; j++)
-    {
-      delay(1000);
-    }
+    delaySeconds(60);
   }
   
 }
 
+void delaySeconds(int num_seconds)
+{
+  for(int i = 0; i < num_seconds)
+  {
+    delay(1000);
+  }
+}
 
 
 
