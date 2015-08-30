@@ -133,12 +133,12 @@ delaySeconds(15);
 */
 
 //BEGIN MODULE 2
-
+/*
 ledOn();
 delayMinutes(5);
 ledOff();
 delayMinutes(5);
-
+*/
 //END MODULE 2
 
 }
