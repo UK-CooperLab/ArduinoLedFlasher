@@ -12,9 +12,10 @@ https://github.com/UK-CooperLab
 //Input/Output pin declarations
 int buttonPin = 10;
 int ledPin = 6;
+int boardLedPin =13;
 
 // - Variables for Button Debounce -
-int buttonState;             
+int buttonState = 0;             
 int lastButtonState = LOW;
 long lastDebounceTime = 0;  
 long debounceDelay = 50;
@@ -27,7 +28,11 @@ void delayMinutes(int num_minutes);
 void delaySeconds(int num_seconds);
 void ledOn();
 void ledOff();
+void ledUpdate();
 
+//Module 3 Variables
+boolean mod3_shouldRun = false; 
+long 	mod3_start = 0;
 //Don't edit code above this line
 //******************************
 
@@ -38,7 +43,10 @@ void setup() {
 	//Declare pin modes 
 	pinMode(buttonPin, INPUT);
 	pinMode(ledPin, OUTPUT);
+	pinMode(boardLedPin, OUTPUT);
 	digitalWrite(ledPin, ledState);
+	
+	Serial.begin(115200);
 }
 
 
@@ -84,7 +92,7 @@ third time will turn it on again...
 */
 
 //BEGIN Module 1
-
+/*
 	int reading = digitalRead(buttonPin);
 	if (reading != lastButtonState) 
 		lastDebounceTime = millis();
@@ -93,15 +101,19 @@ third time will turn it on again...
 	if ((millis() - lastDebounceTime) > debounceDelay) 
 	{
 		if (reading != buttonState) 
-			buttonState = reading;
-		if (buttonState == HIGH) 
-		{
-			ledState = !ledState;     
-			digitalWrite(ledPin, ledState);
+		{	buttonState = reading;
+			
+			if (buttonState == HIGH) 
+			{
+				//Serial.println("hello");
+				ledState = !ledState;     
+				ledUpdate();
+			}
 		}
     }
 	lastButtonState = reading;
-	
+	//Serial.println(lastDebounceTime);
+*/
 //END Module 1
 	
 	
@@ -141,22 +153,84 @@ delayMinutes(5);
 */
 //END MODULE 2
 
+
+
+//*****MODULE 3 (timer on/off) *****
+/* This module will repeat the steps below
+and stop once it reaches a certain number of
+hours. For example, it is currently set to:
+
+30 seconds on
+5 minutes off
+(repeat this for 24 hours, then stop)
+
+Once the time limit has expired, and the 
+flashing has stopped, pressing the button
+will start it again. Pressing the button
+while the flashing is running will
+reset the timer. 
+*/
+
+
+//BEGIN MODULE 3
+
+//Change the following line to reflect
+//many hours should run for. Make sure
+//to put a capital L after the number. 
+long	mod3_numHours = 24L;
+if(digitalRead(buttonPin))
+{
+		//don't edit this code 
+		mod3_shouldRun = true;
+		mod3_start = millis();
+		
 }
+while(mod3_shouldRun)
+{
+		//Edit this code to be the flashing
+		//pattern that is desired. 
+		ledOn();
+		delaySeconds(30);
+		ledOff();
+		delayMinutes(5);
+		
+		//don't edit this code
+		if((millis() - mod3_start) > mod3_numHours * 3600 * 1000)
+			mod3_shouldRun = false;
+}
+
+//END MODULE 3
+
+}
+
+
+
+
+
 
 
 //******************************
 //Don't edit code below this line 
+void ledUpdate()
+{
+	if(ledState)
+		ledOff();
+	else
+		ledOn();
+}
 
 void ledOn()
 {
 	ledState = 0;
 	digitalWrite(ledPin, ledState);
+	digitalWrite(boardLedPin, HIGH);
 }
 
 void ledOff()
 {
 	ledState = 1;
 	digitalWrite(ledPin, ledState);
+	digitalWrite(boardLedPin, LOW);
 }
 
 void delayMinutes(int num_minutes)
@@ -167,7 +241,7 @@ void delayMinutes(int num_minutes)
 
 void delaySeconds(int num_seconds)
 {
-  for(int i = 0; i < num_seconds)
+  for(int i = 0; i < num_seconds; i++)
     delay(1000);
 }
 
